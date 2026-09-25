@@ -106,13 +106,13 @@ umbrella.Image = "rbxassetid:6031097223"
 umbrella.Parent = topBar
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(0.52, 0, 0, 30)
-title.Position = UDim2.new(0, 62, 0, 7)
+title.Size = UDim2.new(0.55, 0, 0, 36)
+title.Position = UDim2.new(0, 62, 0, 5)
 title.BackgroundTransparency = 1
 title.Text = "YK8"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextScaled = true
-title.Font = Enum.Font.Cartoon
+title.Font = Enum.Font.PermanentMarker
 title.TextStrokeColor3 = Color3.fromRGB(4, 13, 32)
 title.TextStrokeTransparency = 0.15
 title.ZIndex = 5
@@ -123,13 +123,14 @@ local subtitle = Instance.new("TextLabel")
 subtitle.Size = UDim2.new(0.6, 0, 0, 16)
 subtitle.Position = UDim2.new(0, 64, 0, 34)
 subtitle.BackgroundTransparency = 1
-subtitle.Text = "YK8  /  CONTROL PANEL"
+subtitle.Text = ""
 subtitle.TextColor3 = Color3.fromRGB(255, 215, 215)
 subtitle.TextSize = 10
 subtitle.Font = Enum.Font.GothamBold
 subtitle.TextStrokeColor3 = Color3.fromRGB(4, 13, 32)
 subtitle.TextStrokeTransparency = 0.35
 subtitle.ZIndex = 5
+subtitle.Visible = false
 subtitle.TextXAlignment = Enum.TextXAlignment.Left
 subtitle.Parent = topBar
 
@@ -140,7 +141,7 @@ minimizeBtn.BackgroundColor3 = Color3.fromRGB(160, 30, 52)
 minimizeBtn.Text = "−"
 minimizeBtn.TextColor3 = Color3.new(1,1,1)
 minimizeBtn.TextScaled = true
-minimizeBtn.Font = Enum.Font.GothamBold
+minimizeBtn.Font = Enum.Font.PermanentMarker
 minimizeBtn.Parent = topBar
 
 local minimizeCorner = Instance.new("UICorner")
@@ -165,7 +166,7 @@ closeBtn.BackgroundColor3 = Color3.fromRGB(205, 42, 62)
 closeBtn.Text = "×"
 closeBtn.TextColor3 = Color3.new(1,1,1)
 closeBtn.TextScaled = true
-closeBtn.Font = Enum.Font.GothamBold
+closeBtn.Font = Enum.Font.PermanentMarker
 closeBtn.Parent = topBar
 
 local closeCorner = Instance.new("UICorner")
@@ -236,7 +237,7 @@ playerNameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 playerNameLabel.TextStrokeColor3 = Color3.fromRGB(4, 16, 36)
 playerNameLabel.TextStrokeTransparency = 0.35
 playerNameLabel.TextSize = 18
-playerNameLabel.Font = Enum.Font.GothamBold
+playerNameLabel.Font = Enum.Font.PermanentMarker
 playerNameLabel.TextXAlignment = Enum.TextXAlignment.Left
 playerNameLabel.TextTruncate = Enum.TextTruncate.AtEnd
 playerNameLabel.ZIndex = 6
@@ -251,7 +252,7 @@ userNameLabel.TextColor3 = Color3.fromRGB(255, 210, 215)
 userNameLabel.TextStrokeColor3 = Color3.fromRGB(4, 16, 36)
 userNameLabel.TextStrokeTransparency = 0.4
 userNameLabel.TextSize = 11
-userNameLabel.Font = Enum.Font.GothamMedium
+userNameLabel.Font = Enum.Font.PermanentMarker
 userNameLabel.TextXAlignment = Enum.TextXAlignment.Left
 userNameLabel.TextTruncate = Enum.TextTruncate.AtEnd
 userNameLabel.ZIndex = 6
@@ -295,7 +296,7 @@ miniUserLabel.BackgroundTransparency = 1
 miniUserLabel.Text = "YK8  |  @" .. player.Name
 miniUserLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 miniUserLabel.TextSize = 15
-miniUserLabel.Font = Enum.Font.Cartoon
+miniUserLabel.Font = Enum.Font.PermanentMarker
 miniUserLabel.TextStrokeColor3 = Color3.fromRGB(40, 0, 10)
 miniUserLabel.TextStrokeTransparency = 0.2
 miniUserLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -311,7 +312,7 @@ runtimeLabel.BackgroundTransparency = 1
 runtimeLabel.Text = "ONLINE  •  00:00:00"
 runtimeLabel.TextColor3 = Color3.fromRGB(255, 205, 215)
 runtimeLabel.TextSize = 10
-runtimeLabel.Font = Enum.Font.GothamBold
+runtimeLabel.Font = Enum.Font.PermanentMarker
 runtimeLabel.TextXAlignment = Enum.TextXAlignment.Left
 runtimeLabel.Visible = false
 runtimeLabel.ZIndex = 6
@@ -341,7 +342,7 @@ statusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 statusLabel.TextStrokeColor3 = Color3.fromRGB(5, 15, 31)
 statusLabel.TextStrokeTransparency = 0.35
 statusLabel.TextScaled = true
-statusLabel.Font = Enum.Font.Cartoon
+statusLabel.Font = Enum.Font.PermanentMarker
 statusLabel.TextXAlignment = Enum.TextXAlignment.Left
 statusLabel.ZIndex = 5
 statusLabel.Parent = contentContainer
@@ -355,46 +356,48 @@ speedLabel.TextColor3 = Color3.fromRGB(255, 205, 205)
 speedLabel.TextStrokeColor3 = Color3.fromRGB(5, 15, 31)
 speedLabel.TextStrokeTransparency = 0.35
 speedLabel.TextScaled = true
-speedLabel.Font = Enum.Font.Cartoon
+speedLabel.Font = Enum.Font.PermanentMarker
 speedLabel.TextXAlignment = Enum.TextXAlignment.Left
 speedLabel.ZIndex = 5
 speedLabel.Parent = contentContainer
 
 local startButton = Instance.new("TextButton")
 startButton.Size = UDim2.new(0.9, 0, 0, 44)
-startButton.Position = UDim2.new(0.06, 0, 0.68, 0)
-startButton.Size = UDim2.new(0.88, 0, 0, 54)
+startButton.Position = UDim2.new(0.04, 0, 0.65, 0)
+startButton.Size = UDim2.new(0.92, 0, 0, 62)
 startButton.BackgroundColor3 = Color3.fromRGB(190, 27, 55)
-startButton.Text = "▶ START"
+startButton.BackgroundTransparency = 1
+startButton.Text = ""
 startButton.TextColor3 = Color3.new(1, 1, 1)
 startButton.TextScaled = true
-startButton.Font = Enum.Font.Cartoon
+startButton.Font = Enum.Font.PermanentMarker
 startButton.TextStrokeColor3 = Color3.fromRGB(4, 13, 32)
 startButton.TextStrokeTransparency = 0.25
 startButton.AutoButtonColor = false
 startButton.Active = true
+startButton.ClipsDescendants = true
 startButton.ZIndex = 10
 startButton.Parent = contentContainer
 
 local startButtonImage = Instance.new("ImageLabel")
 startButtonImage.Name = "StartButtonImage"
-startButtonImage.Size = UDim2.fromScale(1, 1)
-startButtonImage.Position = UDim2.fromScale(0, 0)
+startButtonImage.Size = UDim2.new(0.92, 0, 0, 62)
+startButtonImage.Position = UDim2.new(0.04, 0, 0.65, 0)
 startButtonImage.BackgroundTransparency = 1
 startButtonImage.BorderSizePixel = 0
 startButtonImage.Image = "rbxassetid://134655520753678"
-startButtonImage.ImageTransparency = 0.18
+startButtonImage.ImageTransparency = 0
 startButtonImage.ScaleType = Enum.ScaleType.Crop
 startButtonImage.Active = false
-startButtonImage.ZIndex = 1
-startButtonImage.Parent = startButton
+startButtonImage.ZIndex = 11
+startButtonImage.Parent = contentContainer
 
 local startButtonImageCorner = Instance.new("UICorner")
-startButtonImageCorner.CornerRadius = UDim.new(0, 14)
+startButtonImageCorner.CornerRadius = UDim.new(0, 16)
 startButtonImageCorner.Parent = startButtonImage
 
 local startCorner = Instance.new("UICorner")
-startCorner.CornerRadius = UDim.new(0, 14)
+startCorner.CornerRadius = UDim.new(0, 16)
 startCorner.Parent = startButton
 
 local buttonStroke = Instance.new("UIStroke")
@@ -409,6 +412,7 @@ btnGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(1, Color3.fromRGB(145, 14, 39))
 })
 btnGradient.Parent = startButton
+btnGradient.Transparency = NumberSequence.new(1)
 
 startButton.MouseEnter:Connect(function()
     startButton.BackgroundColor3 = Color3.fromRGB(235, 58, 82)
@@ -428,7 +432,7 @@ creditLabel.BackgroundTransparency = 1
 creditLabel.Text = "YK8  /  MM2 FARM"
 creditLabel.TextColor3 = Color3.fromRGB(255, 215, 220)
 creditLabel.TextScaled = true
-creditLabel.Font = Enum.Font.Cartoon
+creditLabel.Font = Enum.Font.PermanentMarker
 creditLabel.TextStrokeColor3 = Color3.fromRGB(4, 13, 32)
 creditLabel.TextStrokeTransparency = 0.35
 creditLabel.TextTransparency = 0.3
@@ -589,8 +593,8 @@ local function toggleMinimize()
         glow.Position = UDim2.new(-0.04, 0, -0.06, 0)
 
         title.Text = "YK8"
-        title.Position = UDim2.new(0, 62, 0, 7)
-        title.Size = UDim2.new(0.52, 0, 0, 30)
+        title.Position = UDim2.new(0, 62, 0, 5)
+        title.Size = UDim2.new(0.55, 0, 0, 36)
         title.TextScaled = true
 
         topCorner.CornerRadius = UDim.new(0, 20)
@@ -607,7 +611,7 @@ local function toggleMinimize()
 
         umbrella.Visible = true
 
-        subtitle.Visible = true
+        subtitle.Visible = false
         title.Visible = true
         miniAvatar.Visible = false
         miniUserLabel.Visible = false
@@ -617,8 +621,8 @@ local function toggleMinimize()
         glow.Position = UDim2.new(-0.02, 0, -0.02, 0)
 
         title.Text = "YK8"
-        title.Position = UDim2.new(0, 62, 0, 7)
-        title.Size = UDim2.new(0.52, 0, 0, 30)
+        title.Position = UDim2.new(0, 62, 0, 5)
+        title.Size = UDim2.new(0.55, 0, 0, 36)
         title.TextScaled = true
 
         topCorner.CornerRadius = UDim.new(0, 16)
