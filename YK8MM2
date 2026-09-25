@@ -1,6 +1,11 @@
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
+local existingGui = playerGui:FindFirstChild("MM2FarmGUI")
+if existingGui then
+    existingGui:Destroy()
+end
+
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "MM2FarmGUI"
 screenGui.ResetOnSpawn = false
@@ -18,8 +23,8 @@ local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Size = UDim2.new(0, 390, 0, 330)
 mainFrame.Position = UDim2.new(0.5, -195, 0.5, -165)
-mainFrame.BackgroundColor3 = Color3.fromRGB(74, 12, 22)
-mainFrame.BackgroundTransparency = 0.48
+mainFrame.BackgroundColor3 = Color3.fromRGB(12, 15, 18)
+mainFrame.BackgroundTransparency = 1
 mainFrame.BorderSizePixel = 0
 mainFrame.ZIndex = 2
 mainFrame.ClipsDescendants = true
@@ -33,7 +38,7 @@ menuBackground.BackgroundColor3 = Color3.fromRGB(12, 15, 18)
 menuBackground.BackgroundTransparency = 0
 menuBackground.BorderSizePixel = 0
 menuBackground.Image = "rbxassetid://129472393964753"
-menuBackground.ImageTransparency = 0.18
+menuBackground.ImageTransparency = 0
 menuBackground.ScaleType = Enum.ScaleType.Crop
 menuBackground.ZIndex = 0
 menuBackground.Parent = mainFrame
@@ -46,7 +51,7 @@ local menuShade = Instance.new("Frame")
 menuShade.Name = "MenuShade"
 menuShade.Size = UDim2.fromScale(1, 1)
 menuShade.BackgroundColor3 = Color3.fromRGB(65, 8, 18)
-menuShade.BackgroundTransparency = 0.64
+menuShade.BackgroundTransparency = 1
 menuShade.BorderSizePixel = 0
 menuShade.ZIndex = 0
 menuShade.Parent = mainFrame
@@ -439,6 +444,561 @@ creditLabel.TextTransparency = 0.3
 creditLabel.ZIndex = 5
 creditLabel.Parent = contentContainer
 
+local tabBar = Instance.new("Frame")
+tabBar.Name = "TabBar"
+tabBar.Size = UDim2.new(0.9, 0, 0, 28)
+tabBar.Position = UDim2.new(0.05, 0, 0, 0)
+tabBar.BackgroundTransparency = 1
+tabBar.ZIndex = 5
+tabBar.Parent = contentContainer
+
+local pageContainer = Instance.new("Frame")
+pageContainer.Name = "PageContainer"
+pageContainer.Size = UDim2.new(0.9, 0, 1, -34)
+pageContainer.Position = UDim2.new(0.05, 0, 0, 34)
+pageContainer.BackgroundTransparency = 1
+pageContainer.Parent = contentContainer
+
+local pages = {}
+local tabs = {}
+local pageNames = {"MAIN", "PLAYER", "VISUALS", "TELEPORT"}
+
+for index, pageName in ipairs(pageNames) do
+    local page = Instance.new("ScrollingFrame")
+    page.Name = pageName .. "Page"
+    page.Size = UDim2.fromScale(1, 1)
+    page.BackgroundColor3 = Color3.fromRGB(68, 11, 27)
+    page.BackgroundTransparency = 1
+    page.BorderSizePixel = 0
+    page.ScrollBarThickness = 3
+    page.CanvasSize = UDim2.new()
+    page.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    page.Visible = index == 1
+    page.Parent = pageContainer
+    pages[pageName] = page
+
+    local pageCorner = Instance.new("UICorner")
+    pageCorner.CornerRadius = UDim.new(0, 10)
+    pageCorner.Parent = page
+
+    if pageName ~= "MAIN" then
+        local layout = Instance.new("UIListLayout")
+        layout.Padding = UDim.new(0, 6)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Parent = page
+    end
+
+    local padding = Instance.new("UIPadding")
+    padding.PaddingTop = UDim.new(0, 8)
+    padding.PaddingBottom = UDim.new(0, 8)
+    padding.PaddingLeft = UDim.new(0, 8)
+    padding.PaddingRight = UDim.new(0, 8)
+    padding.Parent = page
+
+    local tab = Instance.new("TextButton")
+    tab.Name = pageName .. "Tab"
+    tab.Size = UDim2.new(0.25, -4, 1, 0)
+    tab.Position = UDim2.new((index - 1) * 0.25, 0, 0, 0)
+    tab.BackgroundColor3 = index == 1 and Color3.fromRGB(160, 30, 52) or Color3.fromRGB(48, 16, 26)
+    tab.BorderSizePixel = 0
+    tab.Text = pageName
+    tab.TextColor3 = Color3.fromRGB(255, 235, 238)
+    tab.TextSize = 12
+    tab.Font = Enum.Font.PermanentMarker
+    tab.AutoButtonColor = false
+    tab.ZIndex = 6
+    tab.Parent = tabBar
+    tabs[pageName] = tab
+
+    local tabCorner = Instance.new("UICorner")
+    tabCorner.CornerRadius = UDim.new(0, 7)
+    tabCorner.Parent = tab
+end
+
+for _, child in ipairs(contentContainer:GetChildren()) do
+    if child ~= tabBar and child ~= pageContainer then
+        child.Parent = pages.MAIN
+    end
+end
+
+local function showPage(selectedName)
+    for pageName, page in pairs(pages) do
+        page.Visible = pageName == selectedName
+        tabs[pageName].BackgroundColor3 = pageName == selectedName
+            and Color3.fromRGB(160, 30, 52)
+            or Color3.fromRGB(48, 16, 26)
+    end
+end
+
+for pageName, tab in pairs(tabs) do
+    tab.MouseButton1Click:Connect(function()
+        showPage(pageName)
+    end)
+end
+
+local function createRow(page, rowName, rowHeight)
+    local row = Instance.new("Frame")
+    row.Name = rowName
+    row.Size = UDim2.new(1, 0, 0, rowHeight or 38)
+    row.BackgroundColor3 = Color3.fromRGB(48, 16, 26)
+    row.BackgroundTransparency = 0.08
+    row.BorderSizePixel = 0
+    row.Parent = page
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = row
+    return row
+end
+
+local function createLabel(parent, text, size, position)
+    local label = Instance.new("TextLabel")
+    label.Size = size
+    label.Position = position
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = Color3.fromRGB(255, 235, 238)
+    label.TextSize = 13
+    label.Font = Enum.Font.PermanentMarker
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.TextTruncate = Enum.TextTruncate.AtEnd
+    label.Parent = parent
+    return label
+end
+
+local function createButton(parent, text, size, position, callback)
+    local button = Instance.new("TextButton")
+    button.Size = size
+    button.Position = position
+    button.BackgroundColor3 = Color3.fromRGB(160, 30, 52)
+    button.BorderSizePixel = 0
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextSize = 13
+    button.Font = Enum.Font.PermanentMarker
+    button.AutoButtonColor = true
+    button.Parent = parent
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 7)
+    corner.Parent = button
+    button.MouseButton1Click:Connect(callback)
+    return button
+end
+
+local function createToggle(page, labelText, callback)
+    local row = createRow(page, labelText)
+    createLabel(row, labelText, UDim2.new(0.64, -8, 1, 0), UDim2.new(0, 10, 0, 0))
+
+    local enabled = false
+    local button
+    button = createButton(row, "OFF", UDim2.new(0.3, 0, 0, 28), UDim2.new(0.68, 0, 0.5, -14), function()
+        enabled = not enabled
+        button.Text = enabled and "ON" or "OFF"
+        button.BackgroundColor3 = enabled and Color3.fromRGB(67, 150, 112) or Color3.fromRGB(160, 30, 52)
+        callback(enabled)
+    end)
+    return button
+end
+
+local function createNumberRow(page, labelText, defaultValue, propertyName, minimum, maximum)
+    local row = createRow(page, labelText, 48)
+    createLabel(row, labelText, UDim2.new(0.34, -8, 1, 0), UDim2.new(0, 10, 0, 0))
+
+    local input = Instance.new("TextBox")
+    input.Size = UDim2.new(0.24, 0, 0, 28)
+    input.Position = UDim2.new(0.36, 0, 0.5, -14)
+    input.BackgroundColor3 = Color3.fromRGB(28, 12, 20)
+    input.BorderSizePixel = 0
+    input.ClearTextOnFocus = false
+    input.Text = tostring(defaultValue)
+    input.PlaceholderText = "Value"
+    input.TextColor3 = Color3.fromRGB(255, 255, 255)
+    input.TextSize = 13
+    input.Font = Enum.Font.Gotham
+    input.Parent = row
+
+    local inputCorner = Instance.new("UICorner")
+    inputCorner.CornerRadius = UDim.new(0, 6)
+    inputCorner.Parent = input
+
+    createButton(row, "Set", UDim2.new(0.16, 0, 0, 28), UDim2.new(0.63, 0, 0.5, -14), function()
+        local value = tonumber(input.Text)
+        local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+        if value and humanoid then
+            humanoid[propertyName] = math.clamp(value, minimum, maximum)
+        end
+    end)
+
+    createButton(row, "Reset", UDim2.new(0.17, 0, 0, 28), UDim2.new(0.81, 0, 0.5, -14), function()
+        local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid[propertyName] = defaultValue
+            input.Text = tostring(defaultValue)
+        end
+    end)
+end
+
+local runService = game:GetService("RunService")
+local userInputService = game:GetService("UserInputService")
+local flyEnabled = false
+local noclipEnabled = false
+local infiniteJumpEnabled = false
+local flyVelocity
+local flyGyro
+local flyConnection
+local noclipConnection
+local originalCollision = {}
+local targetInput
+local jumpRequestConnection
+
+createNumberRow(pages.PLAYER, "WalkSpeed", 16, "WalkSpeed", 0, 200)
+createNumberRow(pages.PLAYER, "JumpPower", 50, "JumpPower", 0, 200)
+
+createToggle(pages.PLAYER, "Fly [WASD / Space / Ctrl]", function(enabled)
+    flyEnabled = enabled
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+    if enabled and root and humanoid then
+        flyVelocity = Instance.new("BodyVelocity")
+        flyVelocity.MaxForce = Vector3.new(100000, 100000, 100000)
+        flyVelocity.Velocity = Vector3.zero
+        flyVelocity.Parent = root
+
+        flyGyro = Instance.new("BodyGyro")
+        flyGyro.MaxTorque = Vector3.new(100000, 100000, 100000)
+        flyGyro.P = 10000
+        flyGyro.CFrame = root.CFrame
+        flyGyro.Parent = root
+
+        humanoid.PlatformStand = true
+        flyConnection = runService.RenderStepped:Connect(function()
+            if not flyEnabled or not root.Parent then return end
+            local camera = workspace.CurrentCamera
+            local direction = Vector3.zero
+            if userInputService:IsKeyDown(Enum.KeyCode.W) then direction += camera.CFrame.LookVector end
+            if userInputService:IsKeyDown(Enum.KeyCode.S) then direction -= camera.CFrame.LookVector end
+            if userInputService:IsKeyDown(Enum.KeyCode.D) then direction += camera.CFrame.RightVector end
+            if userInputService:IsKeyDown(Enum.KeyCode.A) then direction -= camera.CFrame.RightVector end
+            if userInputService:IsKeyDown(Enum.KeyCode.Space) then direction += Vector3.yAxis end
+            if userInputService:IsKeyDown(Enum.KeyCode.LeftControl) then direction -= Vector3.yAxis end
+            flyVelocity.Velocity = direction.Magnitude > 0 and direction.Unit * 50 or Vector3.zero
+            flyGyro.CFrame = camera.CFrame
+        end)
+    else
+        if flyConnection then flyConnection:Disconnect(); flyConnection = nil end
+        if flyVelocity then flyVelocity:Destroy(); flyVelocity = nil end
+        if flyGyro then flyGyro:Destroy(); flyGyro = nil end
+        if humanoid then humanoid.PlatformStand = false end
+    end
+end)
+
+createToggle(pages.PLAYER, "Noclip", function(enabled)
+    noclipEnabled = enabled
+    if noclipConnection then
+        noclipConnection:Disconnect()
+        noclipConnection = nil
+    end
+
+    if enabled then
+        noclipConnection = runService.Stepped:Connect(function()
+            local character = player.Character
+            if not character then return end
+            for _, descendant in ipairs(character:GetDescendants()) do
+                if descendant:IsA("BasePart") then
+                    if originalCollision[descendant] == nil then
+                        originalCollision[descendant] = descendant.CanCollide
+                    end
+                    descendant.CanCollide = false
+                end
+            end
+        end)
+    else
+        for part, canCollide in pairs(originalCollision) do
+            if part.Parent then part.CanCollide = canCollide end
+        end
+        table.clear(originalCollision)
+    end
+end)
+
+createToggle(pages.PLAYER, "Infinite jump", function(enabled)
+    infiniteJumpEnabled = enabled
+end)
+
+jumpRequestConnection = userInputService.JumpRequest:Connect(function()
+    if not infiniteJumpEnabled then return end
+    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then humanoid:ChangeState(Enum.HumanoidStateType.Jumping) end
+end)
+
+local xrayEnabled = false
+local originalTransparency = {}
+local espEnabled = false
+local espHighlights = {}
+
+createToggle(pages.VISUALS, "X-Ray", function(enabled)
+    xrayEnabled = enabled
+    if enabled then
+        for _, descendant in ipairs(workspace:GetDescendants()) do
+            if descendant:IsA("BasePart") and not (player.Character and descendant:IsDescendantOf(player.Character)) then
+                originalTransparency[descendant] = descendant.LocalTransparencyModifier
+                descendant.LocalTransparencyModifier = 0.75
+            end
+        end
+    else
+        for part, transparency in pairs(originalTransparency) do
+            if part.Parent then part.LocalTransparencyModifier = transparency end
+        end
+        table.clear(originalTransparency)
+    end
+end)
+
+local function clearHighlights()
+    for _, highlight in pairs(espHighlights) do
+        highlight:Destroy()
+    end
+    table.clear(espHighlights)
+end
+
+local function refreshHighlights()
+    clearHighlights()
+    if not espEnabled then return end
+    for _, otherPlayer in ipairs(game:GetService("Players"):GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character then
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "PrivateAntiCheatESP"
+            highlight.Adornee = otherPlayer.Character
+            highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            highlight.FillColor = Color3.fromRGB(220, 50, 75)
+            highlight.OutlineColor = Color3.fromRGB(255, 230, 230)
+            highlight.Parent = screenGui
+            table.insert(espHighlights, highlight)
+        end
+    end
+end
+
+createToggle(pages.VISUALS, "Player highlights", function(enabled)
+    espEnabled = enabled
+    refreshHighlights()
+end)
+
+createButton(pages.VISUALS, "Refresh highlights", UDim2.new(1, 0, 0, 36), UDim2.new(), refreshHighlights)
+
+local savedLightingEffects = {}
+local savedRenderEffects = {}
+createToggle(pages.VISUALS, "Anti-Lag (local effects)", function(enabled)
+    if enabled then
+        for _, descendant in ipairs(game:GetService("Lighting"):GetDescendants()) do
+            if descendant:IsA("PostEffect") then
+                savedLightingEffects[descendant] = descendant.Enabled
+                descendant.Enabled = false
+            end
+        end
+        for _, descendant in ipairs(workspace:GetDescendants()) do
+            if descendant:IsA("ParticleEmitter") or descendant:IsA("Trail") or descendant:IsA("Beam") then
+                savedRenderEffects[descendant] = descendant.Enabled
+                descendant.Enabled = false
+            end
+        end
+    else
+        for effect, wasEnabled in pairs(savedLightingEffects) do
+            if effect.Parent then effect.Enabled = wasEnabled end
+        end
+        for effect, wasEnabled in pairs(savedRenderEffects) do
+            if effect.Parent then effect.Enabled = wasEnabled end
+        end
+        table.clear(savedLightingEffects)
+        table.clear(savedRenderEffects)
+    end
+end)
+
+local returnCFrame
+targetInput = Instance.new("TextBox")
+targetInput.Name = "TargetPlayer"
+targetInput.Size = UDim2.new(1, 0, 0, 38)
+targetInput.BackgroundColor3 = Color3.fromRGB(48, 16, 26)
+targetInput.BorderSizePixel = 0
+targetInput.ClearTextOnFocus = false
+targetInput.PlaceholderText = "Selected player or SpawnLocation name"
+targetInput.Text = ""
+targetInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+targetInput.TextSize = 13
+targetInput.Font = Enum.Font.Gotham
+targetInput.Parent = pages.TELEPORT
+
+local playerList
+local playerListExpanded = false
+local playerListToggle
+playerListToggle = createButton(pages.TELEPORT, "Players  +", UDim2.new(1, 0, 0, 36), UDim2.new(), function()
+    playerListExpanded = not playerListExpanded
+    playerList.Visible = playerListExpanded
+    playerList.Size = UDim2.new(1, 0, 0, playerListExpanded and 88 or 0)
+    playerListToggle.Text = playerListExpanded and "Players  -" or "Players  +"
+end)
+
+playerList = Instance.new("ScrollingFrame")
+playerList.Name = "PlayerList"
+playerList.Size = UDim2.new(1, 0, 0, 0)
+playerList.BackgroundColor3 = Color3.fromRGB(48, 16, 26)
+playerList.BorderSizePixel = 0
+playerList.ScrollBarThickness = 3
+playerList.CanvasSize = UDim2.new()
+playerList.AutomaticCanvasSize = Enum.AutomaticSize.Y
+playerList.Visible = false
+playerList.Parent = pages.TELEPORT
+
+local playerListLayout = Instance.new("UIListLayout")
+playerListLayout.Padding = UDim.new(0, 4)
+playerListLayout.SortOrder = Enum.SortOrder.Name
+playerListLayout.Parent = playerList
+
+local playerListPadding = Instance.new("UIPadding")
+playerListPadding.PaddingTop = UDim.new(0, 4)
+playerListPadding.PaddingBottom = UDim.new(0, 4)
+playerListPadding.PaddingLeft = UDim.new(0, 4)
+playerListPadding.PaddingRight = UDim.new(0, 4)
+playerListPadding.Parent = playerList
+
+local function refreshPlayerList()
+    for _, child in ipairs(playerList:GetChildren()) do
+        if child:IsA("TextButton") then child:Destroy() end
+    end
+
+    for _, listedPlayer in ipairs(game:GetService("Players"):GetPlayers()) do
+        if listedPlayer ~= player then
+            local selectionButton = Instance.new("TextButton")
+            selectionButton.Name = listedPlayer.Name
+            selectionButton.Size = UDim2.new(1, -8, 0, 48)
+            selectionButton.BackgroundColor3 = Color3.fromRGB(68, 11, 27)
+            selectionButton.BorderSizePixel = 0
+            selectionButton.Text = ""
+            selectionButton.Parent = playerList
+
+            local avatar = Instance.new("ImageLabel")
+            avatar.Name = "Avatar"
+            avatar.Size = UDim2.fromOffset(38, 38)
+            avatar.Position = UDim2.new(0, 5, 0.5, -19)
+            avatar.BackgroundColor3 = Color3.fromRGB(120, 25, 45)
+            avatar.BorderSizePixel = 0
+            avatar.Active = false
+            avatar.Parent = selectionButton
+
+            local avatarCorner = Instance.new("UICorner")
+            avatarCorner.CornerRadius = UDim.new(1, 0)
+            avatarCorner.Parent = avatar
+
+            local displayName = Instance.new("TextLabel")
+            displayName.Size = UDim2.new(1, -56, 0, 23)
+            displayName.Position = UDim2.new(0, 51, 0, 4)
+            displayName.BackgroundTransparency = 1
+            displayName.Text = listedPlayer.DisplayName
+            displayName.TextColor3 = Color3.fromRGB(255, 245, 246)
+            displayName.TextSize = 14
+            displayName.Font = Enum.Font.PermanentMarker
+            displayName.TextXAlignment = Enum.TextXAlignment.Left
+            displayName.TextTruncate = Enum.TextTruncate.AtEnd
+            displayName.Active = false
+            displayName.Parent = selectionButton
+
+            local username = Instance.new("TextLabel")
+            username.Size = UDim2.new(1, -56, 0, 16)
+            username.Position = UDim2.new(0, 51, 0, 27)
+            username.BackgroundTransparency = 1
+            username.Text = "@" .. listedPlayer.Name
+            username.TextColor3 = Color3.fromRGB(255, 205, 215)
+            username.TextSize = 11
+            username.Font = Enum.Font.Gotham
+            username.TextXAlignment = Enum.TextXAlignment.Left
+            username.TextTruncate = Enum.TextTruncate.AtEnd
+            username.Active = false
+            username.Parent = selectionButton
+
+            task.spawn(function()
+                local success, thumbnail = pcall(function()
+                    return game:GetService("Players"):GetUserThumbnailAsync(
+                        listedPlayer.UserId,
+                        Enum.ThumbnailType.HeadShot,
+                        Enum.ThumbnailSize.Size100x100
+                    )
+                end)
+                if success and selectionButton.Parent then
+                    avatar.Image = thumbnail
+                end
+            end)
+
+            selectionButton.MouseButton1Click:Connect(function()
+                targetInput.Text = listedPlayer.Name
+            end)
+        end
+    end
+end
+
+refreshPlayerList()
+local playerListConnections = {
+    game:GetService("Players").PlayerAdded:Connect(function()
+        task.defer(refreshPlayerList)
+    end),
+    game:GetService("Players").PlayerRemoving:Connect(function()
+        task.defer(refreshPlayerList)
+    end),
+}
+
+local function teleportTo(cframe)
+    local character = player.Character
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    returnCFrame = returnCFrame or root.CFrame
+    root.CFrame = cframe
+end
+
+createButton(pages.TELEPORT, "Teleport to selected player", UDim2.new(1, 0, 0, 36), UDim2.new(), function()
+    local targetName = targetInput.Text:lower()
+    if targetName == "" then return end
+    for _, otherPlayer in ipairs(game:GetService("Players"):GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Name:lower():sub(1, #targetName) == targetName then
+            local targetRoot = otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if targetRoot then teleportTo(targetRoot.CFrame * CFrame.new(0, 0, 4)) end
+            break
+        end
+    end
+end)
+
+createButton(pages.TELEPORT, "Bring all players to me", UDim2.new(1, 0, 0, 36), UDim2.new(), function()
+    local remote = game:GetService("ReplicatedStorage"):FindFirstChild("AdminTeleportAllToMe")
+    if remote and remote:IsA("RemoteEvent") then
+        remote:FireServer()
+    else
+        warn("AdminTeleportAllToMe server handler is not installed")
+    end
+end)
+
+createButton(pages.TELEPORT, "Teleport to named spawn", UDim2.new(1, 0, 0, 36), UDim2.new(), function()
+    local requestedName = targetInput.Text:lower()
+    if requestedName == "" then return end
+    for _, descendant in ipairs(workspace:GetDescendants()) do
+        if descendant:IsA("SpawnLocation") and descendant.Name:lower():sub(1, #requestedName) == requestedName then
+            teleportTo(descendant.CFrame + Vector3.new(0, 3, 0))
+            break
+        end
+    end
+end)
+
+createButton(pages.TELEPORT, "Teleport to pickup", UDim2.new(1, 0, 0, 36), UDim2.new(), function()
+    local pickup = workspace:FindFirstChild("GunDrop", true)
+    local pickupPart = pickup and (pickup:IsA("BasePart") and pickup or pickup:FindFirstChildWhichIsA("BasePart", true))
+    if pickupPart then teleportTo(pickupPart.CFrame * CFrame.new(0, 0, 3)) end
+end)
+
+createButton(pages.TELEPORT, "Return to saved position", UDim2.new(1, 0, 0, 36), UDim2.new(), function()
+    local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if root and returnCFrame then
+        root.CFrame = returnCFrame
+        returnCFrame = nil
+    end
+end)
+
 mainFrame.InputBegan:Connect(function(input)
     if not isMinimized and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
         dragging = true
@@ -635,6 +1195,29 @@ closeBtn.MouseButton1Click:Connect(function()
     mainFrame:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.In, Enum.EasingStyle.Quad, 0.3, true)
     task.wait(0.3)
     stopFarming()
+    flyEnabled = false
+    infiniteJumpEnabled = false
+    if flyConnection then flyConnection:Disconnect() end
+    if flyVelocity then flyVelocity:Destroy() end
+    if flyGyro then flyGyro:Destroy() end
+    if noclipConnection then noclipConnection:Disconnect() end
+    if jumpRequestConnection then jumpRequestConnection:Disconnect() end
+    for _, connection in ipairs(playerListConnections) do
+        connection:Disconnect()
+    end
+    for part, canCollide in pairs(originalCollision) do
+        if part.Parent then part.CanCollide = canCollide end
+    end
+    for part, transparency in pairs(originalTransparency) do
+        if part.Parent then part.LocalTransparencyModifier = transparency end
+    end
+    for effect, wasEnabled in pairs(savedLightingEffects) do
+        if effect.Parent then effect.Enabled = wasEnabled end
+    end
+    for effect, wasEnabled in pairs(savedRenderEffects) do
+        if effect.Parent then effect.Enabled = wasEnabled end
+    end
+    clearHighlights()
     screenGui:Destroy()
 end)
 
