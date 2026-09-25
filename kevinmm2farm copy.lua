@@ -372,7 +372,8 @@ startButton.Font = Enum.Font.Cartoon
 startButton.TextStrokeColor3 = Color3.fromRGB(4, 13, 32)
 startButton.TextStrokeTransparency = 0.25
 startButton.AutoButtonColor = false
-startButton.ZIndex = 5
+startButton.Active = true
+startButton.ZIndex = 10
 startButton.Parent = contentContainer
 
 local startButtonImage = Instance.new("ImageLabel")
@@ -384,7 +385,8 @@ startButtonImage.BorderSizePixel = 0
 startButtonImage.Image = "rbxassetid://134655520753678"
 startButtonImage.ImageTransparency = 0.18
 startButtonImage.ScaleType = Enum.ScaleType.Crop
-startButtonImage.ZIndex = 4
+startButtonImage.Active = false
+startButtonImage.ZIndex = 1
 startButtonImage.Parent = startButton
 
 local startButtonImageCorner = Instance.new("UICorner")
